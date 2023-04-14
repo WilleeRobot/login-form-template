@@ -1,0 +1,16 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(12, 11, 79);
+  padding: 0 2rem;
+}
+
+.header h1 {
+  color: rgb(236, 235, 244);
+}
