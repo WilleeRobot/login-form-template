@@ -1,35 +1,47 @@
 import Button from "../UI/Button";
 import Card from "../UI/Card";
 import classes from "./Login.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Login = ({ onLogin }) => {
   // **** States - must use state to manage the form inputs because we are doing real time validation as user types -> hooks into validity of button. Cannot use Refs
-  const [emailIsValid, setEmailIsValid] = useState(true);
+  const [emailIsValid, setEmailIsValid] = useState();
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
-  const [passwordIsValid, setPasswordIsValid] = useState(true);
+  const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
+
+  // ***** useEffects() for validations
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log("check form validity)");
+      setFormIsValid(
+        enteredEmail.includes("@") && enteredPassword.trim().length > 6
+      );
+    }, 500);
+    return () => {
+      console.log("CLEANUP");
+      clearTimeout(identifier);
+    };
+  }, [enteredEmail, enteredPassword]);
 
   // ***** Handler functions
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
-    setFormIsValid(
-      event.target.value.includes("@") && enteredPassword.trim().length > 6
-    );
   };
+
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
-    setFormIsValid(
-      event.target.value.trim().length > 6 && enteredEmail.includes("@")
-    );
   };
+
   const validateEmailHandler = () => {
     setEmailIsValid(enteredEmail.includes("@"));
   };
+
   const validatePasswordHandler = () => {
     setPasswordIsValid(enteredPassword.trim().length > 6);
   };
+
   const submitHandler = (event) => {
     event.preventDefault();
     onLogin(enteredEmail, enteredPassword);
@@ -37,12 +49,13 @@ const Login = ({ onLogin }) => {
     setEnteredEmail("");
     setEnteredPassword("");
   };
+
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            !emailIsValid ? classes.invalid : ""
+            emailIsValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="email">Email</label>
@@ -56,7 +69,7 @@ const Login = ({ onLogin }) => {
         </div>
         <div
           className={`${classes.control} ${
-            !passwordIsValid ? classes.invalid : ""
+            passwordIsValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="password">Password</label>
