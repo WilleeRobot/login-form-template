@@ -33,7 +33,12 @@ function App() {
 
   return (
     <>
-      <Header isAuthenticated={isLoggedIn} onLogout={logoutHandler} />;
+      <Header
+        companyName="Orange Monorail"
+        isAuthenticated={isLoggedIn}
+        onLogout={logoutHandler}
+      />
+      ;
       <main>
         {!isLoggedIn && <Login onLogin={logInHandler} />}
         {isLoggedIn && <Home onLogout={logoutHandler} />}
